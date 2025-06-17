@@ -22,9 +22,11 @@ import { useRouter } from "next/navigation"
 import { UserSelect } from "@/components/common/user-select"
 import { Plus, X } from "lucide-react"
 import { searchUsers } from "@/scripts/user-actions"
+import { searchClients } from "@/scripts/client-actions"
 
 export function EditProjectDialog({ children, project }) {
   const [users, setUsers] = useState([])
+  const [clients, setClients] = useState([])
   const [team, setTeam] = useState([])
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -54,12 +56,15 @@ export function EditProjectDialog({ children, project }) {
   }, [open, project])
 
   useEffect(() => {
-    async function loadUsers() {
+    async function loadUsersandClient() {
       console.log("Searching user...")
-      const result = await searchUsers("", 1, 100)
-      if (result.success) setUsers(result.data || [])
+      const [userResult, clientResult] = await Promise.all([searchUsers("", 1, 100), searchClients("", 1, 100)])
+      if (userResult.success && clientResult.success) {
+        setUsers(userResult.data || [])
+        setClients(clientResult.data || [])
+      }
     }
-    loadUsers()
+    loadUsersandClient()
   }, [])
 
   const router = useRouter()
@@ -149,10 +154,12 @@ export function EditProjectDialog({ children, project }) {
             <div className="grid gap-2">
               <Label htmlFor="client">Client</Label>
               <ClientSelect
+                clients={clients}
                 key={`client-${project._id}-${open}`}
                 value={clientId}
                 onValueChange={setClientId}
                 required
+                placeholder="Select client"
               />
             </div>
 
@@ -209,7 +216,7 @@ export function EditProjectDialog({ children, project }) {
                 </div>
               )}
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="project_start_date">Start Date</Label>

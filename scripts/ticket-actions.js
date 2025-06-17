@@ -11,8 +11,8 @@ export async function deleteTicket(id) {
   console.debug("[deleteTicket] called with id:", id)
   try {
     const res = await axios.delete(`${BASE_URL}/${id}`)
-    revalidatePath("/tickets")
     revalidatePath("/")
+    revalidatePath("/tickets")
     return { success: true, data: res.data.data }
   } catch (error) {
     console.error("[deleteTicket] error:", error)

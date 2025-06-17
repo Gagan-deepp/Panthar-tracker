@@ -7,8 +7,6 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Rada
 
 export function DashboardCharts({ projectStatusData, ticketTrendData, clientStatusData }) {
 
-  console.log("Project status data : ", projectStatusData)
-  console.log("\n\nTicket status data : ", ticketTrendData)
 
   return (
     <>

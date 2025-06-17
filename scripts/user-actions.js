@@ -55,7 +55,6 @@ export async function searchUsers(search, page = 1, limit = 10) {
       params: { search, page, limit },
     })
 
-    console.debug("Search users response: ", res.data)
     return { success: true, data: res.data.data }
   } catch (error) {
     console.log("Error while searching users ==> ", error.response.data.error)

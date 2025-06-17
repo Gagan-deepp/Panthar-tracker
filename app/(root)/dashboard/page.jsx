@@ -7,6 +7,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { auth } from "@/lib/auth"
 import { dashboardMetrics } from "@/scripts/auth-action"
+import { redirect } from "next/navigation"
 import { Suspense } from "react"
 
 function DashboardSkeleton() {
@@ -32,8 +33,6 @@ async function DashboardChartsContainer() {
 
 
   const res = await dashboardMetrics();
-
-  console.log("Dashboard Metrics ==> ", res)
 
   // Process project status data
   const projectStatusMap = {
@@ -89,7 +88,14 @@ async function DashboardChartsContainer() {
   return <DashboardCharts projectStatusData={projectStatusData} ticketTrendData={ticketTrendData} clientStatusData={formattedData} />
 }
 
-export default function Dashboard() {
+export default async function Dashboard() {
+
+  const session = await auth()
+
+  if (!session?.user) {
+    redirect("/")
+  }
+
   return (
     <div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
